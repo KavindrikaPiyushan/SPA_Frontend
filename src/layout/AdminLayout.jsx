@@ -14,10 +14,10 @@ export default function AdminLayout() {
   });
 
   const sections = {
-    services: ['Overview', 'Active Services', 'Add New', 'Categories'],
+    services: ['Create Services', 'Active Services', 'Inactive Services'],
     bookings: ['All Bookings', 'Pending', 'Confirmed', 'Completed', 'Cancelled'],
-    logs: ['Activity Log', 'System Logs', 'Error Logs', 'Audit Trail'],
-    settings: ['Account Details', 'Preferences', 'Security', 'Notifications']
+    logs: ['All Logs'],
+    settings: ['Account Details', 'Notifications']
   };
 
   const sectionIcons = {
@@ -32,7 +32,7 @@ export default function AdminLayout() {
       {/* Sidebar */}
       <div className={`w-72 ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-r flex flex-col`}>
         {/* Profile Section */}
-        <div className={`p-6 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+        <div className={`h-22 p-6 border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
           <div className="flex items-center space-x-3">
             <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-white font-semibold text-lg">
               JD
@@ -103,7 +103,7 @@ export default function AdminLayout() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col">
         {/* Top Bar */}
-        <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-b px-8 py-4`}>
+        <div className={`${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-gray-200'} border-b px-8 py-4 h-22`}>
           <div className="flex items-center justify-between">
             <div>
               <h1 className={`text-2xl font-bold capitalize ${darkMode ? 'text-white' : 'text-gray-900'}`}>{activeSection}</h1>
@@ -141,7 +141,7 @@ export default function AdminLayout() {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-8">
+        {/* <div className="flex-1 overflow-y-auto p-8">
           <div className="max-w-7xl mx-auto">
             {activeSection === 'settings' && activePage === 'Account Details' ? (
               <div className={`${darkMode ? 'bg-gray-800' : 'bg-white'} rounded-lg shadow-sm border ${darkMode ? 'border-gray-700' : 'border-gray-200'} p-8`}>
@@ -270,7 +270,7 @@ export default function AdminLayout() {
               </div>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
