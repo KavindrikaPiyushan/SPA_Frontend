@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Settings, LogOut, Calendar, Package, FileText, ChevronRight, Bell, Search, Moon, Sun, User, Mail, Phone, MapPin, Save } from 'lucide-react';
+import { Outlet } from 'react-router-dom';
 
 export default function AdminLayout() {
   const [activeSection, setActiveSection] = useState('services');
@@ -141,6 +142,12 @@ export default function AdminLayout() {
         </div>
 
         {/* Content Area */}
+        <div className="flex-1 overflow-y-auto p-8">
+          <div className="max-w-7xl mx-auto">
+        <Outlet />
+        </div>
+        </div>
+
         {/* <div className="flex-1 overflow-y-auto p-8">
           <div className="max-w-7xl mx-auto">
             {activeSection === 'settings' && activePage === 'Account Details' ? (

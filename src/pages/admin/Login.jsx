@@ -77,8 +77,7 @@ export default function Login() {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className={`absolute left-4 z-10 top-1/2 transform  -translate-y-1/2 w-5 h-5 transition-all duration-300 ${focusedField === 'email' ? 'text-emerald-500' : 'text-gray-400'}`} />
-               
+                <Mail className={`absolute left-4 z-10 top-1/2 transform  -translate-y-1/2 w-5 h-5 transition-all duration-300 ${focusedField === 'email' ? 'text-emerald-500' : 'text-gray-400'}`} />               
                 <input
                   type="email"
                   value={email}
