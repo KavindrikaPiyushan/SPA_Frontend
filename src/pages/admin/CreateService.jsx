@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useDarkMode } from '../../context/DarkModeContext';
 
 export default function CreateService() {
+  const { darkMode } = useDarkMode();
   const [formData, setFormData] = useState({
     name: '',
     duration: '',
@@ -79,27 +81,26 @@ export default function CreateService() {
   };
 
   return (
-    <div className="min-h-screen   px-4 sm:px-6 lg:px-8">
+    <div className={`${darkMode ? 'bg-gray-900' : 'bg-white'} min-h-screen px-4 sm:px-6 lg:px-8`}>
       <div className="max-w-3xl mx-auto">
-        {/* Header Section */}
-       
-
         {/* Main Card */}
-        <div className="bg-white rounded-3xl shadow-2xl overflow-hidden border border-slate-100">
+        <div className={`rounded-3xl shadow-2xl overflow-hidden border ${darkMode ? 'bg-gray-800 border-gray-700' : 'bg-white border-slate-100'}`}>
           <div className="p-8 sm:p-10">
-             <div className="text-center mb-8">
-         
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent mb-2">
-            Create New Service
-          </h1>
-          <p className="text-slate-600 text-lg">Add a luxurious treatment to your spa menu</p>
-        </div>
+            <div className="text-center mb-8">
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent mb-2">
+                Create New Service
+              </h1>
+              <p className={`text-lg ${darkMode ? 'text-slate-400' : 'text-slate-600'}`}>
+                Add a luxurious treatment to your spa menu
+              </p>
+            </div>
+
             {/* Message Alert */}
             {message.text && (
               <div className={`mb-8 p-4 rounded-2xl border-2 ${
                 message.type === 'success' 
-                  ? 'bg-emerald-50 border-emerald-200' 
-                  : 'bg-rose-50 border-rose-200'
+                  ? darkMode ? 'bg-emerald-900/30 border-emerald-700' : 'bg-emerald-50 border-emerald-200'
+                  : darkMode ? 'bg-rose-900/30 border-rose-700' : 'bg-rose-50 border-rose-200'
               }`}>
                 <div className="flex items-start gap-3">
                   <div className={`flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center ${
@@ -116,7 +117,9 @@ export default function CreateService() {
                     )}
                   </div>
                   <p className={`text-sm font-medium ${
-                    message.type === 'success' ? 'text-emerald-800' : 'text-rose-800'
+                    message.type === 'success' 
+                      ? darkMode ? 'text-emerald-300' : 'text-emerald-800'
+                      : darkMode ? 'text-rose-300' : 'text-rose-800'
                   }`}>
                     {message.text}
                   </p>
@@ -128,7 +131,7 @@ export default function CreateService() {
             <div className="space-y-6">
               {/* Service Name */}
               <div>
-                <label htmlFor="name" className="block text-sm font-semibold text-slate-800 mb-2">
+                <label htmlFor="name" className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}>
                   Service Name <span className="text-blue-500">*</span>
                 </label>
                 <input
@@ -138,7 +141,11 @@ export default function CreateService() {
                   value={formData.name}
                   onChange={handleChange}
                   required
-                  className="w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:bg-white transition-all outline-none text-slate-800 placeholder-slate-400"
+                  className={`w-full px-4 py-3.5 border-2 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all outline-none ${
+                    darkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:bg-gray-700' 
+                      : 'bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:bg-white'
+                  }`}
                   placeholder="e.g., Swedish Massage, Facial Treatment"
                 />
               </div>
@@ -147,7 +154,7 @@ export default function CreateService() {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 {/* Duration */}
                 <div>
-                  <label htmlFor="duration" className="block text-sm font-semibold text-slate-800 mb-2">
+                  <label htmlFor="duration" className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}>
                     Duration (min) <span className="text-blue-500">*</span>
                   </label>
                   <div className="relative">
@@ -159,10 +166,14 @@ export default function CreateService() {
                       onChange={handleChange}
                       required
                       min="1"
-                      className="w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:bg-white transition-all outline-none text-slate-800"
+                      className={`w-full px-4 py-3.5 border-2 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all outline-none ${
+                        darkMode 
+                          ? 'bg-gray-700 border-gray-600 text-white focus:bg-gray-700' 
+                          : 'bg-slate-50 border-slate-200 text-slate-800 focus:bg-white'
+                      }`}
                       placeholder="60"
                     />
-                    <div className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 text-sm font-medium pointer-events-none">
+                    <div className={`absolute right-4 top-1/2 -translate-y-1/2 text-sm font-medium pointer-events-none ${darkMode ? 'text-gray-400' : 'text-slate-400'}`}>
                       min
                     </div>
                   </div>
@@ -170,7 +181,7 @@ export default function CreateService() {
 
                 {/* Admin ID */}
                 <div>
-                  <label htmlFor="aid" className="block text-sm font-semibold text-slate-800 mb-2">
+                  <label htmlFor="aid" className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}>
                     Admin ID <span className="text-blue-500">*</span>
                   </label>
                   <input
@@ -180,7 +191,11 @@ export default function CreateService() {
                     value={formData.aid}
                     onChange={handleChange}
                     required
-                    className="w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:bg-white transition-all outline-none text-slate-800 placeholder-slate-400"
+                    className={`w-full px-4 py-3.5 border-2 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all outline-none ${
+                      darkMode 
+                        ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:bg-gray-700' 
+                        : 'bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:bg-white'
+                    }`}
                     placeholder="Admin ID"
                   />
                 </div>
@@ -188,7 +203,7 @@ export default function CreateService() {
 
               {/* Description */}
               <div>
-                <label htmlFor="description" className="block text-sm font-semibold text-slate-800 mb-2">
+                <label htmlFor="description" className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}>
                   Description <span className="text-blue-500">*</span>
                 </label>
                 <textarea
@@ -198,14 +213,18 @@ export default function CreateService() {
                   onChange={handleChange}
                   required
                   rows="5"
-                  className="w-full px-4 py-3.5 bg-slate-50 border-2 border-slate-200 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 focus:bg-white transition-all outline-none resize-none text-slate-800 placeholder-slate-400"
+                  className={`w-full px-4 py-3.5 border-2 rounded-xl focus:ring-2 focus:ring-blue-400 focus:border-blue-400 transition-all outline-none resize-none ${
+                    darkMode 
+                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400 focus:bg-gray-700' 
+                      : 'bg-slate-50 border-slate-200 text-slate-800 placeholder-slate-400 focus:bg-white'
+                  }`}
                   placeholder="Describe the service, its benefits, and what clients can expect..."
                 />
               </div>
 
               {/* Media Upload */}
               <div>
-                <label className="block text-sm font-semibold text-slate-800 mb-2">
+                <label className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}>
                   Service Gallery
                 </label>
                 
@@ -221,16 +240,28 @@ export default function CreateService() {
                   />
                   <label
                     htmlFor="media-upload"
-                    className="flex items-center justify-center w-full px-6 py-10 border-3 border-dashed border-slate-300 rounded-2xl cursor-pointer hover:border-blue-400 hover:bg-blue-50 transition-all group"
+                    className={`flex items-center justify-center w-full px-6 py-10 border-3 border-dashed rounded-2xl cursor-pointer transition-all group ${
+                      darkMode 
+                        ? 'border-gray-600 hover:border-blue-500 hover:bg-gray-700/50' 
+                        : 'border-slate-300 hover:border-blue-400 hover:bg-blue-50'
+                    }`}
                   >
                     <div className="text-center">
-                      <div className="mx-auto w-16 h-16 bg-gradient-to-br from-blue-100 to-blue-200 rounded-2xl flex items-center justify-center mb-4 group-hover:from-blue-200 group-hover:to-blue-300 transition-all">
+                      <div className={`mx-auto w-16 h-16 rounded-2xl flex items-center justify-center mb-4 transition-all ${
+                        darkMode 
+                          ? 'bg-gradient-to-br from-blue-900/50 to-blue-800/50 group-hover:from-blue-800/70 group-hover:to-blue-700/70' 
+                          : 'bg-gradient-to-br from-blue-100 to-blue-200 group-hover:from-blue-200 group-hover:to-blue-300'
+                      }`}>
                         <svg className="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                         </svg>
                       </div>
-                      <p className="text-base font-semibold text-slate-800 mb-1">Upload images or videos</p>
-                      <p className="text-sm text-slate-500">PNG, JPG, MP4, MOV • Max 10MB per file</p>
+                      <p className={`text-base font-semibold mb-1 ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}>
+                        Upload images or videos
+                      </p>
+                      <p className={`text-sm ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
+                        PNG, JPG, MP4, MOV • Max 10MB per file
+                      </p>
                     </div>
                   </label>
                 </div>
@@ -239,7 +270,11 @@ export default function CreateService() {
                 {mediaPreview.length > 0 && (
                   <div className="mt-6 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                     {mediaPreview.map((media, index) => (
-                      <div key={index} className="relative group rounded-2xl overflow-hidden border-2 border-slate-200 bg-slate-50 hover:border-blue-300 transition-all">
+                      <div key={index} className={`relative group rounded-2xl overflow-hidden border-2 transition-all ${
+                        darkMode 
+                          ? 'border-gray-600 bg-gray-700 hover:border-blue-500' 
+                          : 'border-slate-200 bg-slate-50 hover:border-blue-300'
+                      }`}>
                         {media.type.startsWith('image/') ? (
                           <img
                             src={media.url}
@@ -247,12 +282,16 @@ export default function CreateService() {
                             className="w-full h-36 object-cover"
                           />
                         ) : (
-                          <div className="w-full h-36 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+                          <div className={`w-full h-36 flex items-center justify-center ${
+                            darkMode 
+                              ? 'bg-gradient-to-br from-gray-700 to-gray-800' 
+                              : 'bg-gradient-to-br from-slate-100 to-slate-200'
+                          }`}>
                             <div className="text-center">
-                              <svg className="h-12 w-12 text-slate-400 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <svg className={`h-12 w-12 mx-auto mb-2 ${darkMode ? 'text-gray-500' : 'text-slate-400'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                               </svg>
-                              <p className="text-xs text-slate-500 font-medium">Video</p>
+                              <p className={`text-xs font-medium ${darkMode ? 'text-gray-400' : 'text-slate-500'}`}>Video</p>
                             </div>
                           </div>
                         )}
@@ -269,8 +308,14 @@ export default function CreateService() {
                         </button>
                         
                         {/* File Name */}
-                        <div className="p-3 bg-white border-t-2 border-slate-100">
-                          <p className="text-xs text-slate-600 font-medium truncate">{media.name}</p>
+                        <div className={`p-3 border-t-2 ${
+                          darkMode 
+                            ? 'bg-gray-800 border-gray-600' 
+                            : 'bg-white border-slate-100'
+                        }`}>
+                          <p className={`text-xs font-medium truncate ${darkMode ? 'text-slate-300' : 'text-slate-600'}`}>
+                            {media.name}
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -286,7 +331,7 @@ export default function CreateService() {
                   disabled={loading}
                   className={`w-full py-4 px-6 rounded-xl font-bold text-white text-lg transition-all transform ${
                     loading
-                      ? 'bg-slate-400 cursor-not-allowed'
+                      ? darkMode ? 'bg-gray-600 cursor-not-allowed' : 'bg-slate-400 cursor-not-allowed'
                       : 'bg-gradient-to-r from-blue-500 to-blue-500 hover:from-blue-600 hover:to-blue-600 hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98] shadow-xl'
                   }`}
                 >
@@ -313,7 +358,7 @@ export default function CreateService() {
         </div>
 
         {/* Footer Note */}
-        <p className="text-center text-sm text-slate-500 mt-6">
+        <p className={`text-center text-sm mt-6 ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
           All fields marked with <span className="text-blue-500">*</span> are required
         </p>
       </div>
