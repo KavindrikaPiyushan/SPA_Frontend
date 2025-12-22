@@ -1,5 +1,5 @@
-import { verify } from "../service/auth.service";
-import useApi from "../hooks/useApi";
+import { verify } from "../api/service/auth.service";
+import useApi from "../api/hooks/useApi";
 import { createContext, useContext, useEffect, useState } from "react";
 
 const AuthContext = createContext();
