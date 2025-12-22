@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Settings, LogOut, Calendar, Package, FileText, ChevronRight, Bell, Search, Moon, Sun, User, Mail, Phone, MapPin, Save } from 'lucide-react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { DarkModeProvider } from '../context/DarkModeContext';
+import useApi from '../api/hooks/useApi';
+import {logout} from '../api/service/auth.service.js';
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -44,6 +46,15 @@ export default function AdminLayout() {
       navigate(route);
     }
   };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate('/admin/login');
+    } catch (error) {
+      console.error('Logout failed', error);
+    }
+  }
 
   return (
     <DarkModeProvider darkMode={darkMode} setDarkMode={setDarkMode}>
@@ -112,7 +123,7 @@ export default function AdminLayout() {
         <div className={`border-t ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
           <button className={`w-full px-6 py-3 flex items-center space-x-3 transition-colors ${
             darkMode ? 'text-red-400 hover:bg-red-900/20' : 'text-red-600 hover:bg-red-50'
-          }`}>
+          }`} onClick={handleLogout}>
             <LogOut className="w-5 h-5" />
             <span className="font-medium">Logout</span>
           </button>
