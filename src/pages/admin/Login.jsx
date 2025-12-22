@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { Eye, EyeOff, Mail, Lock, Sparkles } from 'lucide-react';
 import logo from '../../assets/logo.png';
+import {login} from '../../api/service/auth.service.js';
+import useApi from '../../api/hooks/useApi.js';
+import { useNavigate } from 'react-router-dom';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -8,14 +11,19 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
+  const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const {request, loading, error} = useApi(login);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
-    setTimeout(() => {
-      setIsLoading(false);
-      alert('Login functionality would be implemented here');
-    }, 1500);
+    try{
+      await request ({email,password});
+      console.log("Logged in successfully");
+      navigate('/admin/create-service');
+    }catch(err){
+      console.error("Login failed",err);
+    }
   };
 
   return (
@@ -127,6 +135,8 @@ export default function Login() {
               </a>
             </div>
 
+              {error && <p>{error.response?.data?.message}</p>}
+
             {/* Submit Button */}
             <button
               onClick={handleSubmit}
@@ -135,7 +145,7 @@ export default function Login() {
             >
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <span className="relative z-10">
-                {isLoading ? (
+                {loading ? (
                   <span className="flex items-center justify-center">
                     <svg className="animate-spin h-5 w-5 mr-3" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
