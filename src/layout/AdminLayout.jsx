@@ -4,6 +4,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import { DarkModeProvider } from '../context/DarkModeContext';
 import useApi from '../api/hooks/useApi';
 import {logout} from '../api/service/auth.service.js';
+import { useAuth } from '../context/useAuth.js';
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -17,6 +18,7 @@ export default function AdminLayout() {
     address: '123 Spa Street, Wellness City',
     role: 'Administrator'
   });
+  const { setIsAuthenticated } = useAuth();
 
   const sections = {
     services: ['Create Services', 'Active Services', 'Inactive Services'],
@@ -50,6 +52,7 @@ export default function AdminLayout() {
   const handleLogout = async () => {
     try {
       await logout();
+      setIsAuthenticated(false);
       navigate('/admin/login');
     } catch (error) {
       console.error('Logout failed', error);

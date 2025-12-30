@@ -4,14 +4,15 @@ import logo from '../../assets/logo.png';
 import {login} from '../../api/service/auth.service.js';
 import useApi from '../../api/hooks/useApi.js';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/useAuth.js';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [focusedField, setFocusedField] = useState(null);
   const navigate = useNavigate();
+  const { setIsAuthenticated } = useAuth();
 
   const {request, loading, error} = useApi(login);
 
@@ -19,6 +20,7 @@ export default function Login() {
     e.preventDefault();
     try{
       await request ({email,password});
+      setIsAuthenticated(true);
       console.log("Logged in successfully");
       navigate('/admin/create-service');
     }catch(err){
@@ -140,7 +142,7 @@ export default function Login() {
             {/* Submit Button */}
             <button
               onClick={handleSubmit}
-              disabled={isLoading}
+              disabled={loading}
               className="relative w-full overflow-hidden text-white bg-gradient-to-r from-emerald-500 to-emerald-600 py-3 rounded-xl font-semibold shadow-lg hover:shadow-2xl hover:shadow-emerald-500/50 transform hover:-translate-y-1 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none group"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-emerald-400 to-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
