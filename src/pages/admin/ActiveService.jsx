@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { api } from '../../api';
 import { useDarkMode } from '../../context/DarkModeContext';
 
 export default function ActiveService() {
@@ -15,16 +16,12 @@ export default function ActiveService() {
   const fetchServices = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/services');
-      const data = await response.json();
+      setLoading(true);
+      const { data } = await api.get('/api/services');
       console.log(data);
-      if (response.ok) {
-        setServices(data);
-      } else {
-        setError('Failed to load services');
-      }
+      setServices(data);
     } catch (err) {
-      setError('An error occurred while fetching services');
+      setError('Failed to load services');
       console.error(err);
     } finally {
       setLoading(false);

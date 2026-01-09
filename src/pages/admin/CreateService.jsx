@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useDarkMode } from '../../context/DarkModeContext';
+import { api } from '../../api';
+import axios from 'axios';
 
 export default function CreateService() {
   const { darkMode } = useDarkMode();
@@ -22,6 +24,34 @@ export default function CreateService() {
     }));
   };
 
+  
+const uploadToCloudinary = async (file) => {
+  // get signature
+  const { data: { signature, timestamp, cloudName, apiKey } } = await api.post("/api/cloudinary/create-signature", {
+    folder: "services"
+  });
+
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("api_key", apiKey);
+  formData.append("timestamp", timestamp);
+  formData.append("signature", signature);
+  formData.append("folder", "services");
+
+  const { data } = await axios.post(
+    `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+    formData
+  );
+
+  return {
+    url: data.secure_url,
+    public_id: data.public_id,
+    resource_type: data.resource_type,
+  };
+};
+
+  
+
   const handleMediaUpload = (e) => {
     const files = Array.from(e.target.files);
     setMediaFiles(prev => [...prev, ...files]);
@@ -43,42 +73,52 @@ export default function CreateService() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setMessage({ type: '', text: '' });
+  e.preventDefault();
+  setLoading(true);
+  setMessage({ type: '', text: '' });
 
-    try {
-      const formDataToSend = new FormData();
-      formDataToSend.append('name', formData.name);
-      formDataToSend.append('duration', formData.duration);
-      formDataToSend.append('description', formData.description);
-      formDataToSend.append('aid', formData.aid);
-      
-      mediaFiles.forEach((file) => {
-        formDataToSend.append('media', file);
-      });
+  try {
+    // 1️⃣ Upload all media files to Cloudinary
+    const uploadedMedia = await Promise.all(
+      mediaFiles.map((file) => uploadToCloudinary(file))
+    );
 
-      const response = await fetch('/api/services', {
-        method: 'POST',
-        body: formDataToSend
-      });
+    // 2️⃣ Prepare clean JSON payload
+    const payload = {
+      name: formData.name,
+      duration: formData.duration,
+      description: formData.description,
+      aid: formData.aid,
+      media: uploadedMedia, // array of Cloudinary objects
+    };
 
-      const data = await response.json();
+    // 3️⃣ Send JSON to backend (NO FormData)
+    const { data } = await api.post(
+      "/api/services/createService",
+      payload
+    );
 
-      if (response.ok) {
-        setMessage({ type: 'success', text: `Service created successfully! ID: ${data.sid}` });
-        setFormData({ name: '', duration: '', description: '', aid: '' });
-        setMediaFiles([]);
-        setMediaPreview([]);
-      } else {
-        setMessage({ type: 'error', text: 'Failed to create service. Please try again.' });
-      }
-    } catch (error) {
-      setMessage({ type: 'error', text: 'An error occurred. Please try again.' });
-    } finally {
-      setLoading(false);
-    }
-  };
+    // 4️⃣ Success handling
+    setMessage({
+      type: "success",
+      text: `Service created successfully! ID: ${data.sid}`,
+    });
+
+    setFormData({ name: "", duration: "", description: "", aid: "" });
+    setMediaFiles([]);
+    setMediaPreview([]);
+
+  } catch (error) {
+    console.error(error);
+    setMessage({
+      type: "error",
+      text: "An error occurred. Please try again.",
+    });
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className={`${darkMode ? 'bg-gray-900' : 'bg-white'} min-h-screen px-4 sm:px-6 lg:px-8`}>

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { api } from '../../api';
 import { useDarkMode } from '../../context/DarkModeContext';
 
 export default function InactiveService() {
@@ -15,16 +16,13 @@ export default function InactiveService() {
   const fetchServices = async () => {
     try {
       setLoading(true);
-      const response = await fetch('/api/services/inactive');
-      const data = await response.json();
+      setLoading(true);
+      const { data } = await api.get('/api/services/inactive');
       
-      if (response.ok) {
-        setServices(data);
-      } else {
-        setError('Failed to load inactive services');
-      }
+      setServices(data);
     } catch (err) {
-      setError('An error occurred while fetching services');
+      setError('Failed to load inactive services');
+      console.error(err);
     } finally {
       setLoading(false);
     }
@@ -32,14 +30,10 @@ export default function InactiveService() {
 
   const handleReactivate = async (sid) => {
     try {
-      const response = await fetch(`/api/services/${sid}/reactivate`, {
-        method: 'PATCH',
-      });
+      await api.patch(`/api/services/${sid}/reactivate`);
       
-      if (response.ok) {
-        // Remove the reactivated service from the list
-        setServices(services.filter(service => service.sid !== sid));
-      }
+      // Remove the reactivated service from the list
+      setServices(services.filter(service => service.sid !== sid));
     } catch (err) {
       console.error('Failed to reactivate service:', err);
     }
