@@ -9,11 +9,13 @@ export default function EditServiceModal({ service, isOpen, onClose, onUpdate })
     name: '',
     duration: '',
     description: '',
-    aid: ''
+    aid: '',
+    status: 'active'
   });
   const [existingMedia, setExistingMedia] = useState([]); // URLs of existing media
   const [newMediaFiles, setNewMediaFiles] = useState([]); // File objects for new uploads
   const [newMediaPreview, setNewMediaPreview] = useState([]); // Previews for new uploads
+  const [statusOpen, setStatusOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState({ type: '', text: '' });
 
@@ -23,7 +25,8 @@ export default function EditServiceModal({ service, isOpen, onClose, onUpdate })
         name: service.name || '',
         duration: service.duration ? String(service.duration).replace(' mins', '') : '', // Handle "60 mins" or "60"
         description: service.description || '',
-        aid: service.aid || ''
+        aid: service.aid || '',
+        status: service.status || 'active'
       });
       setExistingMedia(service.media || []);
       setNewMediaFiles([]);
@@ -118,6 +121,7 @@ export default function EditServiceModal({ service, isOpen, onClose, onUpdate })
         duration: formattedDuration,
         description: formData.description,
         aid: Number(formData.aid), // Ensure aid is number if needed, user example showed aid: 1
+        status: formData.status,
         media: finalMedia
       };
 
@@ -230,6 +234,89 @@ export default function EditServiceModal({ service, isOpen, onClose, onUpdate })
                     darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-slate-50 border-slate-200 text-slate-800'
                   }`}
                 />
+              </div>
+            </div>
+
+            {/* Status Field */}
+            <div>
+              <label className={`block text-sm font-semibold mb-2 ${darkMode ? 'text-slate-200' : 'text-slate-800'}`}>
+                Status
+              </label>
+              <div className="relative">
+                {/* Dropdown Toggle */}
+                <button
+                  type="button"
+                  onClick={() => setStatusOpen(!statusOpen)}
+                  className={`w-full flex items-center justify-between px-4 py-3 border-2 rounded-xl transition-all ${
+                    darkMode 
+                      ? `bg-gray-700 border-gray-600 text-white ${statusOpen ? 'ring-2 ring-blue-400 border-blue-400' : 'hover:border-gray-500'}`
+                      : `bg-slate-50 border-slate-200 text-slate-800 ${statusOpen ? 'ring-2 ring-blue-400 border-blue-400' : 'hover:border-slate-300'}`
+                  }`}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={`w-3 h-3 rounded-full shadow-lg ${
+                      formData.status === 'active' 
+                        ? 'bg-emerald-500 shadow-emerald-500/50' 
+                        : 'bg-slate-400'
+                    }`} />
+                    <span className="font-medium">
+                      {formData.status === 'active' ? 'Active Service' : 'Inactive Service'}
+                    </span>
+                  </div>
+                  <svg 
+                    className={`w-5 h-5 transition-transform duration-300 ${
+                      statusOpen ? 'rotate-180 text-blue-500' : darkMode ? 'text-gray-400' : 'text-slate-400'
+                    }`} 
+                    fill="none" 
+                    viewBox="0 0 24 24" 
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+
+                {/* Dropdown Menu */}
+                {statusOpen && (
+                  <>
+                    <div className="fixed inset-0 z-10" onClick={() => setStatusOpen(false)} />
+                    <div className={`absolute z-20 w-full mt-2 rounded-xl borderShadow-xl overflow-hidden animate-in fade-in slide-in-from-top-2 duration-200 ${
+                      darkMode ? 'bg-gray-800 border-gray-700 border shadow-black/50' : 'bg-white border-slate-100 border shadow-slate-200/50'
+                    }`}>
+                      {[
+                        { value: 'active', label: 'Active Service', color: 'bg-emerald-500' },
+                        { value: 'inactive', label: 'Inactive Service', color: 'bg-slate-400' }
+                      ].map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => {
+                            setFormData(prev => ({ ...prev, status: option.value }));
+                            setStatusOpen(false);
+                          }}
+                          className={`w-full flex items-center justify-between px-4 py-3.5 transition-all text-left group ${
+                            formData.status === option.value
+                              ? darkMode ? 'bg-blue-900/20 text-blue-300' : 'bg-blue-50 text-blue-700'
+                              : darkMode ? 'text-slate-300 hover:bg-gray-700' : 'text-slate-600 hover:bg-slate-50'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className={`w-3 h-3 rounded-full ${
+                              option.value === 'active' 
+                                ? 'bg-emerald-500 shadow-lg shadow-emerald-500/50' 
+                                : 'bg-slate-400'
+                            }`} />
+                            <span className="font-medium">{option.label}</span>
+                          </div>
+                          {formData.status === option.value && (
+                            <svg className="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                            </svg>
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
               </div>
             </div>
 
