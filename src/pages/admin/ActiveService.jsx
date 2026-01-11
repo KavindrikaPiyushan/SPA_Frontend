@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../../api';
 import { useDarkMode } from '../../context/DarkModeContext';
 import MediaCarousel from '../../components/MediaCarousel';
-import EditServiceModal from './EditServiceModal';
+import EditServiceModal from '../../components/admin/EditServiceModal';
 
 export default function ActiveService() {
   const { darkMode } = useDarkMode();
