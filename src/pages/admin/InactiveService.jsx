@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../api';
 import { useDarkMode } from '../../context/DarkModeContext';
+import EditServiceModal from './EditServiceModal';
 
 export default function InactiveService() {
   const { darkMode } = useDarkMode();
@@ -8,6 +9,7 @@ export default function InactiveService() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [editingService, setEditingService] = useState(null);
 
   useEffect(() => {
     fetchServices();
@@ -226,12 +228,14 @@ export default function InactiveService() {
                           Reactivate
                         </span>
                       </button>
-                      <button className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
-                        darkMode 
-                          ? 'bg-gray-700 hover:bg-gray-600 text-slate-300' 
-                          : 'bg-slate-200 hover:bg-slate-300 text-slate-700'
-                      }`}>
-                        Details
+                      <button 
+                        onClick={() => setEditingService(service)}
+                        className={`px-4 py-2.5 rounded-xl text-sm font-bold transition-all ${
+                          darkMode 
+                            ? 'bg-gray-700 hover:bg-gray-600 text-slate-300' 
+                            : 'bg-slate-200 hover:bg-slate-300 text-slate-700'
+                        }`}>
+                        Edit Service
                       </button>
                     </div>
                   </div>
@@ -268,6 +272,13 @@ export default function InactiveService() {
           </div>
         )}
       </div>
+        {/* Edit Modal */}
+        <EditServiceModal 
+          service={editingService}
+          isOpen={!!editingService}
+          onClose={() => setEditingService(null)}
+          onUpdate={fetchServices}
+        />
     </div>
   );
 }

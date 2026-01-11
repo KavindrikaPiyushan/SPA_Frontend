@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { api } from '../../api';
 import { useDarkMode } from '../../context/DarkModeContext';
 import MediaCarousel from '../../components/MediaCarousel';
+import EditServiceModal from './EditServiceModal';
 
 export default function ActiveService() {
   const { darkMode } = useDarkMode();
@@ -9,6 +10,7 @@ export default function ActiveService() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [editingService, setEditingService] = useState(null);
 
   useEffect(() => {
     fetchServices();
@@ -197,12 +199,14 @@ export default function ActiveService() {
                     <span className={`text-xs font-medium ${darkMode ? 'text-slate-400' : 'text-slate-500'}`}>
                       ID: {service.sid}
                     </span>
-                    <button className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
-                      darkMode 
-                        ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                        : 'bg-blue-500 hover:bg-blue-600 text-white'
-                    }`}>
-                      View Details
+                    <button 
+                      onClick={() => setEditingService(service)}
+                      className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${
+                        darkMode 
+                          ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                          : 'bg-blue-500 hover:bg-blue-600 text-white'
+                      }`}>
+                      Edit Service
                     </button>
                   </div>
                 </div>
@@ -211,6 +215,13 @@ export default function ActiveService() {
           </div>
         )}
       </div>
+        {/* Edit Modal */}
+        <EditServiceModal 
+          service={editingService}
+          isOpen={!!editingService}
+          onClose={() => setEditingService(null)}
+          onUpdate={fetchServices}
+        />
     </div>
   );
 }
