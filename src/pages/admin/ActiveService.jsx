@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { api } from '../../api';
 import { useDarkMode } from '../../context/DarkModeContext';
+import MediaCarousel from '../../components/MediaCarousel';
 
 export default function ActiveService() {
   const { darkMode } = useDarkMode();
@@ -17,7 +18,7 @@ export default function ActiveService() {
     try {
       setLoading(true);
       setLoading(true);
-      const { data } = await api.get('/api/services');
+      const { data } = await api.get('/api/services/getServices');
       console.log(data);
       setServices(data);
     } catch (err) {
@@ -148,6 +149,9 @@ export default function ActiveService() {
                     : 'bg-white border-slate-100 hover:border-blue-300'
                 }`}
               >
+                {/* Media Carousel */}
+                <MediaCarousel media={service.media} altText={service.name} />
+
                 {/* Service Header */}
                 <div className={`p-6 border-b-2 ${darkMode ? 'border-gray-700' : 'border-slate-100'}`}>
                   <div className="flex items-start justify-between mb-3">
