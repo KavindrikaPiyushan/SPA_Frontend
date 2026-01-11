@@ -25,11 +25,19 @@ const MediaCarousel = ({ media, altText }) => {
   return (
     <div className="relative w-full h-48 group">
       <div className="w-full h-full overflow-hidden rounded-t-xl">
-        <img
-          src={media[currentIndex].url}
-          alt={`${altText} - ${currentIndex + 1}`}
-          className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
-        />
+{media[currentIndex].resource_type === 'video' ? (
+          <video
+            src={media[currentIndex].url}
+            className="w-full h-full object-cover"
+            controls
+          />
+        ) : (
+          <img
+            src={media[currentIndex].url}
+            alt={`${altText} - ${currentIndex + 1}`}
+            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+          />
+        )}
       </div>
 
       {media.length > 1 && (
